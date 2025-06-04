@@ -17,8 +17,9 @@ public class ArticleService {
         this.articleMapper = articleMapper;
     }
 
+
     public ArticleEntity getArticleByIndex(int index) {
-        ArticleEntity article = articleMapper.selectById(index); // 메서드명 수정
+        ArticleEntity article = articleMapper.selectById(index);
 
         if (article == null || article.isDeleted()) {
             throw new IllegalArgumentException("게시글을 찾을 수 없습니다.");
@@ -29,6 +30,7 @@ public class ArticleService {
 
         return article;
     }
+
 
     public int createArticle(String nickname, String password, String title, String content) {
         if (nickname == null || nickname.trim().isEmpty()) {
@@ -96,7 +98,7 @@ public class ArticleService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        int result = articleMapper.update(index);
+        int result = articleMapper.update(article);
 
         return result > 0;
     }

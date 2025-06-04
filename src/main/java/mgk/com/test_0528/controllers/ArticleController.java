@@ -7,14 +7,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin(origins = "*")
 @Controller
 @RequestMapping(value = "/article")
 public class ArticleController {
@@ -59,7 +57,6 @@ public class ArticleController {
         Map<String, Object> response = new HashMap<>();
 
         try {
-
             int articleIndex = articleService.createArticle(nickname, password, title, content);
 
             response.put("result", "success");
@@ -82,7 +79,6 @@ public class ArticleController {
         Map<String,Object> response = new HashMap<>();
 
         try {
-
             boolean deleteResult = articleService.deleteArticle(index, password);
 
             if(deleteResult) {
