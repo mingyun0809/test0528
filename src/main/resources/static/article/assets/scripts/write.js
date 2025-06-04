@@ -43,15 +43,13 @@ document.getElementById('writeForm').addEventListener('submit', function(e) {
     }
 
     const formData = new FormData();
+    const xhr = new XMLHttpRequest();
     formData.append('nickname', nickname);
     formData.append('password', password);
     formData.append('title', title);
     formData.append('content', content);
 
     console.log('전송할 데이터:', {nickname, password, title, content});
-
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:8080/article/', true);
 
     xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -62,7 +60,6 @@ document.getElementById('writeForm').addEventListener('submit', function(e) {
 
                     if (response.result === 'success') {
                         alert('게시글이 작성되었습니다.');
-                        window.location.href = '/article/?index=' + response.index;
                     } else if (response.result === 'failure') {
                         alert(response.message || '알 수 없는 이유로 작성에 실패하였습니다.');
                     } else {
@@ -84,5 +81,6 @@ document.getElementById('writeForm').addEventListener('submit', function(e) {
         alert('통신 도중 오류가 발생하였습니다.');
     };
 
+    xhr.open('POST', '/write', true);
     xhr.send(formData);
 });
