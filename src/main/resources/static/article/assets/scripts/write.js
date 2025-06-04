@@ -37,11 +37,18 @@ document.getElementById('writeForm').addEventListener('submit', function(e) {
         return;
     }
 
+    if (!content) {
+        alert('내용을 입력해주세요.');
+        return;
+    }
+
     const formData = new FormData();
     formData.append('nickname', nickname);
     formData.append('password', password);
     formData.append('title', title);
     formData.append('content', content);
+
+    console.log('전송할 데이터:', {nickname, password, title, content});
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', 'http://localhost:8080/article/', true);
@@ -51,24 +58,29 @@ document.getElementById('writeForm').addEventListener('submit', function(e) {
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     const response = JSON.parse(xhr.responseText);
+                    console.log('서버 응답:', response);
 
                     if (response.result === 'success') {
+                        alert('게시글이 작성되었습니다.');
                         window.location.href = '/article/?index=' + response.index;
                     } else if (response.result === 'failure') {
-                        alert('알 수 없는 이유로 작성에 실패하였습니다.');
+                        alert(response.message || '알 수 없는 이유로 작성에 실패하였습니다.');
                     } else {
                         alert('알 수 없는 응답입니다.');
                     }
                 } catch (error) {
+                    console.error('응답 파싱 오류:', error);
                     alert('서버 응답을 처리하는 중 오류가 발생했습니다.');
                 }
             } else {
+                console.error('HTTP 오류:', xhr.status);
                 alert('통신 도중 오류가 발생하였습니다.');
             }
         }
     };
 
     xhr.onerror = function() {
+        console.error('네트워크 오류');
         alert('통신 도중 오류가 발생하였습니다.');
     };
 

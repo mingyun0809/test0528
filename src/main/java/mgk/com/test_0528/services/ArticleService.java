@@ -17,14 +17,12 @@ public class ArticleService {
         this.articleMapper = articleMapper;
     }
 
-
     public ArticleEntity getArticleByIndex(int index) {
-        ArticleEntity article = articleMapper.selectById(index);
+        ArticleEntity article = articleMapper.selectById(index); // 메서드명 수정
 
         if (article == null || article.isDeleted()) {
             throw new IllegalArgumentException("게시글을 찾을 수 없습니다.");
         }
-
 
         articleMapper.incrementView(index);
         article.setView(article.getView() + 1);
