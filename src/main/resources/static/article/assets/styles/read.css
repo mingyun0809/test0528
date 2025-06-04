@@ -80,11 +80,24 @@ body {
     white-space: pre-wrap;
 }
 
+.bottom-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .delete-section {
     display: flex;
     gap: 0.5rem;
     align-items: center;
     justify-content: flex-end;
+}
+
+.list-section {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .password-input {
@@ -128,19 +141,45 @@ body {
     background-color: #bd2130;
 }
 
+.modify-btn {
+    background-color: #2d9e8c;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
 
+.modify-btn:hover {
+    background-color: #2b978e;
+}
 
+.modify-btn:active {
+    background-color: #299383;
+}
 
+.list-btn {
+    background-color: #999999;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
 
+.list-btn:hover {
+    background-color: #888888;
+}
 
-
-
-
-
-
-
-
-
+.list-btn:active {
+    background-color: #777777;
+}
 
 
 

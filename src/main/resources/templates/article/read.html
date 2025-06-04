@@ -36,9 +36,15 @@
             <div class="info-label">내용</div>
             <div class="content-box" th:text="${article.content}">-</div>
         </div>
-        <div class="delete-section">
-            <input required type="password" class="password-input" name="password" placeholder="비밀번호" minlength="4" maxlength="25">
-            <button type="button" class="delete-btn" id="deleteBtn">삭제하기</button>
+        <div class="bottom-section">
+            <div class="list-section">
+                <button type="button" class="list-btn" name="listBtn">목록</button>
+                <button type="button" class="modify-btn" name="modifyBtn">수정하기</button>
+            </div>
+            <div class="delete-section">
+                <input required type="password" class="password-input" name="password" placeholder="비밀번호" minlength="4" maxlength="25">
+                <button type="button" class="delete-btn" id="deleteBtn">삭제하기</button>
+            </div>
         </div>
     </div>
 
