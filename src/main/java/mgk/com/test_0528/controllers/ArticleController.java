@@ -29,6 +29,28 @@ public class ArticleController {
         return "article/write";
     }
 
+    @RequestMapping(value = "/modify", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public String getModify(@RequestParam(value = "index", required = false)Integer index, Model model) {
+        if(index == null) {
+            return "article/read";
+        }
+
+        try {
+            ArticleEntity article = articleService.getArticleByIndex(index);
+            model.addAttribute("article", article);
+            model.addAttribute("result", "success");
+        } catch (Exception e) {
+            model.addAttribute("result", "failure");
+        }
+
+        return "article/modify";
+    }
+
+    @RequestMapping(value = "list", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public String getList() {
+        return "article/list";
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public String getRead(@RequestParam(value = "index", required = false) Integer index, Model model) {
         if (index == null) {

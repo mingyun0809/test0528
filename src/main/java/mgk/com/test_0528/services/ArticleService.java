@@ -103,6 +103,61 @@ public class ArticleService {
         return result > 0;
     }
 
+    public boolean updateArticle(int index, String nickname, String password, String title, String content) {
+        if (nickname == null || nickname.trim().isEmpty()) {
+            throw new IllegalArgumentException("닉네임을 입력해주세요.");
+        }
+
+        if (password == null || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("비밀번호를 입력해주세요.");
+        }
+
+        if (password.trim().length() < 4 || password.trim().length() > 25) {
+            throw new IllegalArgumentException("비밀번호는 4자 이상 25자 미만으로 입력해주세요.");
+        }
+
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("제목을 입력해주세요.");
+        }
+
+        if (title.trim().length() > 100) {
+            throw new IllegalArgumentException("제목은 100자 이하로 입력해주세요.");
+        }
+
+        if (content == null || content.trim().isEmpty()) {
+            throw new IllegalArgumentException("내용을 입력해주세요.");
+        }
+
+        ArticleEntity article = articleMapper.selectById(index);
+
+        if (article == null) {
+            throw new IllegalArgumentException("게시글을 찾을 수 없습니다.");
+        }
+
+        if (article.isDeleted()) {
+            throw new IllegalArgumentException("삭제된 게시글은 수정할 수 없습니다.");
+        }
+
+        if (!article.getPassword().equals(password.trim())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        ArticleEntity updateArticle = ArticleEntity.builder()
+                .index(index)
+                .nickName(nickname.trim())
+                .password(password.trim())
+                .title(title.trim())
+                .content(content.trim())
+                .view(article.getView())
+                .createdAt(article.getCreatedAt())
+                .isDeleted(false)
+                .build();
+
+        int result = articleMapper.update(updateArticle);
+
+        return result > 0;
+    }
+
     public ArticleEntity selectArticleById(int index) {
         return articleMapper.selectById(index);
     }

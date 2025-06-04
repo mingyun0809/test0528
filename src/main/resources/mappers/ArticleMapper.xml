@@ -11,12 +11,8 @@
         UPDATE `exam_0528`.`articles`
         SET `index`      = #{article.index},
             `nickname`   = #{article.nickName},
-            `password`   = #{article.password},
             `title`      = #{article.title},
-            `content`    = #{article.content},
-            `view`       = #{article.view},
-            `created_at` = #{article.createdAt},
-            `is_deleted` = #{article.isDeleted}
+            `content`    = #{article.content}
         WHERE `index` = #{article.index}
         LIMIT 1
     </update>
