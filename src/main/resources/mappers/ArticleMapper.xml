@@ -1,4 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="mgk.com.test_0528.mappers.ArticleMapper">
+    <insert id="insert">
+        INSERT INTO `exam_0528`.`articles`(`index`, nickname, password, title, content, view, created_at, is_deleted)
+        VALUES (#{article.index}, #{article.nickName}, #{article.password}, #{article.title}, #{article.content},
+                #{article.view}, #{article.createdAt}, #{article.isDeleted})
+    </insert>
+
+    <update id="update">
+        UPDATE `exam_0528`.`articles`
+        SET `index`      = #{article.index},
+            `nickname`   = #{article.nickName},
+            `password`   = #{article.password},
+            `title`      = #{article.title},
+            `content`    = #{article.content},
+            `view`       = #{article.view},
+            `created_at` = #{article.createdAt},
+            `is_deleted` = #{article.isDeleted}
+        WHERE `index` = #{article.index}
+        LIMIT 1
+    </update>
+    <update id="incrementView">
+        UPDATE `exam_0528`.`articles`
+        SET `view` = `view` + 1
+        WHERE `index` = #{id}
+        LIMIT 1
+    </update>
+    <delete id="deleteArticle">
+        DELETE FROM `exam_0528`.`articles`
+        WHERE `index` = #{id}
+    </delete>
+
+    <select id="selectById" resultType="mgk.com.test_0528.entities.ArticleEntity">
+        SELECT `index`      AS 'index',
+               `nickname`   AS 'nickName',
+               `password`   AS 'password',
+               `title`      AS 'title',
+               `content`    AS 'content',
+               `view`       AS 'view',
+               `created_at` AS 'createdAt',
+               `is_deleted` AS 'isDeleted'
+        FROM `exam_0528`.`articles`
+        WHERE `index` = #{id}
+        LIMIT 1
+    </select>
 </mapper>
