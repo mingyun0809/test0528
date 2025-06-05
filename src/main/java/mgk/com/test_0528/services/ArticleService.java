@@ -2,10 +2,14 @@ package mgk.com.test_0528.services;
 
 import mgk.com.test_0528.entities.ArticleEntity;
 import mgk.com.test_0528.mappers.ArticleMapper;
+import mgk.com.test_0528.vos.PageVo;
+import mgk.com.test_0528.vos.SearchVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class ArticleService {
@@ -98,64 +102,73 @@ public class ArticleService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        int result = articleMapper.update(article);
+        int result = articleMapper.deleteArticle(index);
 
         return result > 0;
     }
 
-    public boolean updateArticle(int index, String nickname, String password, String title, String content) {
-        if (nickname == null || nickname.trim().isEmpty()) {
-            throw new IllegalArgumentException("닉네임을 입력해주세요.");
+    public String updateArticle(int index,String nickname, String password, String title, String content) {
+        try {
+            ArticleEntity article = articleMapper.selectById(index);
+
+            if (article == null || article.isDeleted()) {
+                return "failure";
+            }
+
+            if (!article.getPassword().equals(password.trim())) {
+                return "failure_password";
+            }
+
+            ArticleEntity updateArticle = ArticleEntity.builder()
+                    .index(index)
+                    .nickName(nickname.trim())
+                    .password(password.trim())
+                    .title(title.trim())
+                    .content(content.trim())
+                    .view(article.getView())
+                    .createdAt(article.getCreatedAt())
+                    .isDeleted(false)
+                    .build();
+
+            int result = articleMapper.update(updateArticle);
+
+            if (result > 0) {
+                return "success";
+            } else {
+                return "failure";
+            }
+
+        } catch (Exception e) {
+            return "failure";
+        }
+    }
+
+    public Map<String, Object> getBoardList(int page, String search) {
+        Map<String, Object> result = new HashMap<>();
+
+        PageVo pageVo = new PageVo(page, 5);
+
+        ArticleEntity[] articles;
+        int totalCount;
+
+        if (search != null && !search.trim().isEmpty()) {
+            SearchVo searchVo = new SearchVo(search.trim());
+            articles = articleMapper.search(pageVo, searchVo);
+            totalCount = articleMapper.countSearch(searchVo);
+        } else {
+            articles = articleMapper.selectAll(pageVo);
+            totalCount = articleMapper.countAll();
         }
 
-        if (password == null || password.trim().isEmpty()) {
-            throw new IllegalArgumentException("비밀번호를 입력해주세요.");
-        }
+        int totalPages = (int) Math.ceil((double) totalCount / 5);
 
-        if (password.trim().length() < 4 || password.trim().length() > 25) {
-            throw new IllegalArgumentException("비밀번호는 4자 이상 25자 미만으로 입력해주세요.");
-        }
+        result.put("articles", articles);
+        result.put("currentPage", page);
+        result.put("totalPages", totalPages);
+        result.put("totalCount", totalCount);
+        result.put("currentSearch", search);
 
-        if (title == null || title.trim().isEmpty()) {
-            throw new IllegalArgumentException("제목을 입력해주세요.");
-        }
-
-        if (title.trim().length() > 100) {
-            throw new IllegalArgumentException("제목은 100자 이하로 입력해주세요.");
-        }
-
-        if (content == null || content.trim().isEmpty()) {
-            throw new IllegalArgumentException("내용을 입력해주세요.");
-        }
-
-        ArticleEntity article = articleMapper.selectById(index);
-
-        if (article == null) {
-            throw new IllegalArgumentException("게시글을 찾을 수 없습니다.");
-        }
-
-        if (article.isDeleted()) {
-            throw new IllegalArgumentException("삭제된 게시글은 수정할 수 없습니다.");
-        }
-
-        if (!article.getPassword().equals(password.trim())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-
-        ArticleEntity updateArticle = ArticleEntity.builder()
-                .index(index)
-                .nickName(nickname.trim())
-                .password(password.trim())
-                .title(title.trim())
-                .content(content.trim())
-                .view(article.getView())
-                .createdAt(article.getCreatedAt())
-                .isDeleted(false)
-                .build();
-
-        int result = articleMapper.update(updateArticle);
-
-        return result > 0;
+        return result;
     }
 
     public ArticleEntity selectArticleById(int index) {

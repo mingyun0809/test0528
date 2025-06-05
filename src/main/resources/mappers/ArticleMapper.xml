@@ -22,7 +22,8 @@
         WHERE `index` = #{id}
         LIMIT 1
     </update>
-    <delete id="deleteArticle">
+
+    <delete id="deleteArticle" parameterType="int">
         DELETE FROM `exam_0528`.`articles`
         WHERE `index` = #{id}
     </delete>
@@ -39,5 +40,51 @@
         FROM `exam_0528`.`articles`
         WHERE `index` = #{id}
         LIMIT 1
+    </select>
+
+    <select id="selectAll" resultType="mgk.com.test_0528.entities.ArticleEntity">
+        SELECT `index`,
+               `nickname` AS nickName,
+               `password`,
+               `title`,
+               `content`,
+               `view`,
+               `created_at` AS createdAt,
+               `is_deleted` AS isDeleted
+        FROM `exam_0528`.`articles`
+        WHERE is_deleted = FALSE
+        ORDER BY `index` DESC
+        LIMIT #{pageVo.size} OFFSET #{pageVo.offset}
+    </select>
+
+    <select id="search">
+        SELECT `index`,
+               `nickname` AS nickName,
+               `password`,
+               `title`,
+               `content`,
+               `view`,
+               `created_at` AS createdAt,
+               `is_deleted` AS isDeleted
+        FROM `exam_0528`.`articles`
+        WHERE `is_deleted` = FALSE
+        AND (`title` LIKE CONCAT('%', #{searchVo.keyword}, '%')
+            OR (`content` LIKE CONCAT('%', #{searchVo.keyword}, '%')))
+        ORDER BY `index` DESC
+        LIMIT #{pageVo.size} OFFSET #{pageVo.offset}
+    </select>
+
+    <select id="countAll" resultType = "int">
+        SELECT COUNT(*)
+        FROM `exam_0528`.`articles`
+        WHERE `is_deleted` = FALSE
+    </select>
+
+    <select id="countSearch" resultType="int">
+        SELECT COUNT(*)
+        FROM `exam_0528`.`articles`
+        WHERE `is_deleted` = FALSE
+        AND (`title` LIKE CONCAT('%', #{searchVo.keyword}, '%')
+            OR (`content` LIKE CONCAT('%', #{searchVo.keyword}, '%')))
     </select>
 </mapper>

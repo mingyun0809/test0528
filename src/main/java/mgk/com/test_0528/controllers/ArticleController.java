@@ -30,15 +30,21 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/modify", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getModify(@RequestParam(value = "index", required = false)Integer index, Model model) {
+    public String getModify(@RequestParam(value = "index", required = false) Integer index, Model model) {
         if(index == null) {
-            return "article/read";
+            model.addAttribute("result", "failure");
+            return "article/modify";
         }
 
         try {
-            ArticleEntity article = articleService.getArticleByIndex(index);
-            model.addAttribute("article", article);
-            model.addAttribute("result", "success");
+            ArticleEntity article = articleService.selectArticleById(index);
+
+            if(article != null && !article.isDeleted()) {
+                model.addAttribute("article", article);
+                model.addAttribute("result", "success");
+            } else {
+                model.addAttribute("result", "failure");
+            }
         } catch (Exception e) {
             model.addAttribute("result", "failure");
         }
@@ -46,9 +52,28 @@ public class ArticleController {
         return "article/modify";
     }
 
-    @RequestMapping(value = "list", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String getList() {
-        return "article/list";
+    @RequestMapping(value = "/board", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public String getBoard(@RequestParam(value = "page", defaultValue = "1") int page,
+                           @RequestParam(value = "search", required = false) String search,
+                           Model model) {
+        try {
+            Map<String, Object> boardData = articleService.getBoardList(page, search);
+
+            model.addAttribute("articles", boardData.get("articles"));
+            model.addAttribute("currentPage", boardData.get("currentPage"));
+            model.addAttribute("totalPages", boardData.get("totalPages"));
+            model.addAttribute("totalCount", boardData.get("totalCount"));
+            model.addAttribute("currentSearch", boardData.get("currentSearch"));
+
+        } catch (Exception e) {
+            model.addAttribute("articles", new ArticleEntity[0]);
+            model.addAttribute("currentPage", 1);
+            model.addAttribute("totalPages", 0);
+            model.addAttribute("totalCount", 0);
+            model.addAttribute("currentSearch", search);
+        }
+
+        return "article/board";
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
@@ -115,6 +140,27 @@ public class ArticleController {
         } catch (Exception e) {
             response.put("result", "failure");
             response.put("message", "서버 오류가 발생했습니다.");
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> patchArticle(
+            @RequestParam("index") int index,
+            @RequestParam("nickname") String nickname,
+            @RequestParam("password") String password,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            String result = articleService.updateArticle(index, nickname, password, title, content);
+            response.put("result", result);
+        } catch (Exception e) {
+            response.put("result", "failure");
         }
 
         return ResponseEntity.ok(response);

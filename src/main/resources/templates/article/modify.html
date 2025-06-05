@@ -10,36 +10,40 @@
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <h1>게시글 수정</h1>
+    <h1 class="title">게시글 수정</h1>
+
+    <div th:if="${result == 'success' and article != null}">
+        <form id="modifyForm" class="form-container">
+            <div class="form-group">
+                <label for="nickname">작성자</label>
+                <input class="input-field" type="text" id="nickname" name="nickname" th:value="${article.nickName}">
+                <input class="input-field" type="password" id="password" name="password" placeholder="비밀번호" minlength="4" maxlength="25" >
+            </div>
+
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input class="input-field" type="text" id="title" name="title" th:value="${article.title}" maxlength="100" >
+            </div>
+
+            <div class="form-group content">
+                <label for="content">내용</label>
+                <textarea class="textarea-field" id="content" name="content" th:text="${article.content}" ></textarea>
+            </div>
+
+            <div class="button-section">
+                <button type="button" class="cancel-btn">취소</button>
+                <button type="submit" class="submit-btn">수정하기</button>
+            </div>
+        </form>
     </div>
 
-    <form id="modifyForm" class="form-container">
-        <div class="form-group">
-            <label for="nickname">작성자</label>
-            <input type="text" id="nickname" name="nickname" th:value="${article.getNickName()}">
+    <div th:if="${result == 'failure'}">
+        <div class="error-message">
+            <h2>게시글을 찾을 수 없습니다.</h2>
+            <p>삭제되었거나 존재하지 않는 게시글입니다.</p>
+            <a href="/article/">게시글 목록으로 이동</a>
         </div>
-
-        <div class="form-group">
-            <label for="password">비밀번호</label>
-            <input type="password" id="password" name="password" placeholder="비밀번호" minlength="4" maxlength="25" required>
-        </div>
-
-        <div class="form-group">
-            <label for="title">제목</label>
-            <input type="text" id="title" name="title" th:value="${article.getTitle}" maxlength="100">
-        </div>
-
-        <div class="form-group">
-            <label for="content">내용</label>
-            <textarea id="content" name="content" th:value="${article.getContent}"></textarea>
-        </div>
-
-        <div class="button-section">
-            <button type="button" class="cancel-btn">취소</button>
-            <button type="submit" class="submit-btn">수정하기</button>
-        </div>
-    </form>
+    </div>
 </div>
 </body>
 </html>

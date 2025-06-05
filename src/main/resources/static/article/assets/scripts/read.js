@@ -62,21 +62,21 @@ document.addEventListener('DOMContentLoaded', function() {
     if (deleteBtn) {
         deleteBtn.addEventListener('click', deleteArticle);
     }
+
+    const modifyBtn = document.querySelector('button[name="modifyBtn"]');
+    if (modifyBtn) {
+        modifyBtn.addEventListener('click', function() {
+            const articleIndex = getArticleIndex();
+            if (articleIndex) {
+                window.location.href = `/article/modify?index=${articleIndex}`;
+            }
+        });
+    }
+
+    const listBtn = document.querySelector('button[name="listBtn"]');
+    if (listBtn) {
+        listBtn.addEventListener('click', function() {
+            window.location.href = '/article/board';
+        });
+    }
 });
-
-const modifyBtn = document.querySelector('button[name="modifyBtn"]');
-if (modifyBtn) {
-    modifyBtn.addEventListener('click', function() {
-        const articleIndex = getArticleIndex();
-        if (articleIndex) {
-            window.location.href = `/article/modify?index=${articleIndex}`;
-        }
-    });
-}
-
-const listBtn = document.querySelector('button[name="listBtn"]');
-if (listBtn) {
-    listBtn.addEventListener('click', function() {
-        window.location.href = '/article/list';
-    });
-}
