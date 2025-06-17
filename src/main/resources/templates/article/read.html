@@ -46,6 +46,19 @@
                 <button type="button" class="delete-btn" id="deleteBtn">삭제하기</button>
             </div>
         </div>
+        <div class="comment-section">
+            <div class="comment-title">댓글</div>
+            <div class="comment-form">
+                <div class="comment-input-row">
+                    <input type="text" class="nickname-input" name="commentNickname" placeholder="닉네임" maxlength="10" required>
+                    <input type="text" class="comment-input" name="commentContent" placeholder="댓글을 입력해 주세요." maxlength="100" required>
+                    <button type="button" class="comment-submit-btn" id="commentSubmitBtn">작성하기</button>
+                </div>
+                <div class="comment-list" id="commentList">
+
+                </div>
+            </div>
+        </div>
     </div>
 
     <div th:if="${result == 'failure'}">

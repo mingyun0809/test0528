@@ -12,3 +12,19 @@ CREATE TABLE `exam_0528`.`articles`
     `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`index`)
 );
+
+CREATE SCHEMA `exam_0613`;
+
+CREATE TABLE `exam_0613`.`comments`
+(
+    `index` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `article_index` INT UNSIGNED NOT NULL,
+    `nickname` VARCHAR(10) NOT NULL,
+    `content` VARCHAR(100) NOT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT NOW(),
+    `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE,
+    CONSTRAINT PRIMARY KEY (`index`),
+    CONSTRAINT FOREIGN KEY (`index`) REFERENCES `exam_0528`.`articles` (`article_index`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)

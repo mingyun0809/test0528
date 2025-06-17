@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mgk.com.test_0528.mappers.CommentMapper">
+    <insert id="insert" parameterType="mgk.com.test_0528.entities.CommentEntity" useGeneratedKeys="true" keyProperty="comment.index">
+        INSERT INTO `exam_0613`.`comments` (`article_index`, `nickname`, `content`, `created_at`, `is_deleted`)
+        VALUES (#{comment.articleIndex}, #{comment.nickname}, #{comment.content}, #{comment.createdAt}, #{comment.isDeleted})
+    </insert>
+    <update id="update" parameterType="mgk.com.test_0528.entities.CommentEntity">
+        UPDATE `exam_0613`.`comments`
+        SET `is_deleted` = TRUE
+        WHERE `index` = #{comment.index}
+        AND `is_deleted` = FALSE
+    </update>
+    <select id="selectAllByArticleIndex" parameterType="int" resultType="mgk.com.test_0528.entities.CommentEntity">
+        SELECT `index`,
+               `article_index` AS articleIndex,
+               `nickname`,
+               `content`,
+               `created_at` AS createdAt,
+               `is_deleted` AS isDeleted
+        FROM `exam_0613`.`comments`
+        WHERE `article_index` = #{articleIndex}
+        AND `is_deleted` = FALSE
+        ORDER BY created_at DESC
+    </select>
+</mapper>
